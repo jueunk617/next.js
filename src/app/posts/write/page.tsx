@@ -24,10 +24,22 @@ export default function Page() {
       return;
     }
 
+    if (titleInput.value.length < 2) {
+      alert("제목을 2자 이상 입력해주세요.");
+      titleInput.focus();
+      return;
+    }
+
     contentTextarea.value = contentTextarea.value.trim();
 
     if (contentTextarea.value.length === 0) {
       alert("내용을 입력해주세요.");
+      contentTextarea.focus();
+      return;
+    }
+
+    if (contentTextarea.value.length < 2) {  
+      alert("내용을 2자 이상 입력해주세요.");
       contentTextarea.focus();
       return;
     }
@@ -38,10 +50,14 @@ export default function Page() {
           title: titleInput.value,
           content: contentTextarea.value,
         }),
-    }).then((data) => {
-       alert(data.msg);
-       router.replace(`/posts/${data.data.id}`);
-    });
+      })
+      .then((data) => {
+        alert(data.msg);
+        router.replace(`/posts/${data.data.id}`);
+      })
+      .catch((error) => {
+        alert(`${error.resultCode} : ${error.msg}`);
+      });
   };
 
   return (
@@ -55,11 +71,14 @@ export default function Page() {
           name="title"
           placeholder="제목"
           autoFocus
+          maxLength={100}
         />
         <textarea
           className="border p-2 rounded"
           name="content"
           placeholder="내용"
+          maxLength={1000}
+          rows={10}
         />
         <button className="border p-2 rounded" type="submit">
           저장
